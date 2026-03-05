@@ -1,0 +1,6 @@
+stop_id,stop_name,stop_lat,stop_lon
+S1,Gare de Rabat-Agdal,34.0049,-6.8524
+S2,Bab El Had,34.0209,-6.8416
+S3,Faculty of Sciences,34.0065,-6.8448
+S4,Technopolis,33.9781,-6.7323
+S5,Hay Riad,33.9678,-6.8721
