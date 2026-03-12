@@ -3,4 +3,4 @@ target/
 stops.txt
 test.http
 HELP.md
-src/main/resources/application.properties
+application.properties

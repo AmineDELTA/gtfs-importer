@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -35,33 +37,41 @@ public class StopServices {
             boolean firstLine = true;
             int lineNumber = 0;
             ArrayList<Stop> stops = new ArrayList<>();
-
+            HashMap<String, Integer> headerMap = new HashMap<>();
+            int maxIndex = 0;
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
 
                 if (firstLine) {
                     firstLine = false;
-                    continue; // skip header
+                    headerMap = parseHeader(line);
+                    if (!headerMap.containsKey("stop_id") || !headerMap.containsKey("stop_name") ||
+                        !headerMap.containsKey("stop_lat") || !headerMap.containsKey("stop_lon")) {
+                        throw new RuntimeException("Missing required columns in header");
+                    }
+                    maxIndex = Collections.max(headerMap.values()); // ← here
+                    continue; //skip header
                 }
 
-                String[] fields = line.split(",");
-                if (fields.length < 4) {
-                    log.warn("Skipping line {}: expected at least 4 fields", lineNumber);
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
+                if (fields.length <= maxIndex) {
+                    log.warn("Skipping line {}: not enough fields", lineNumber);
                     continue;
                 }
 
-                Double latitude = parseLatitude(fields[2].trim());
-                Double longitude = parseLongitude(fields[3].trim());
+                Double latitude = parseLatitude(fields[headerMap.get("stop_lat")].trim());
+                Double longitude = parseLongitude(fields[headerMap.get("stop_lon")].trim());
 
                 if (latitude == null || longitude == null) {
                     log.warn("Skipping line {}: invalid coordinates lat='{}', lon='{}'",
-                            lineNumber, fields[2], fields[3]);
+                            lineNumber, fields[headerMap.get("stop_lat")], fields[headerMap.get("stop_lon")]);
                     continue;
                 }
 
                 Stop stop = new Stop();
-                stop.setId(fields[0].trim());
-                stop.setName(fields[1].trim());
+                stop.setId(fields[headerMap.get("stop_id")].trim());
+                stop.setName(fields[headerMap.get("stop_name")].trim());
                 stop.setLatitude(latitude);
                 stop.setLongitude(longitude);
                 stops.add(stop);
@@ -79,6 +89,15 @@ public class StopServices {
         }
     }
 
+    private HashMap<String, Integer> parseHeader(String headerLine) {
+        HashMap<String, Integer> headerMap = new HashMap<>();
+        String[] headers = headerLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+        for (int i = 0; i < headers.length; i++){
+            headerMap.put(headers[i].trim(), i);
+        }
+        return headerMap;
+    }
+
     public void importZip(InputStream zipInputStream) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(zipInputStream)) {
             ZipEntry entry;
@@ -90,7 +109,7 @@ public class StopServices {
             }
         }
     }
-    
+
     private Double parseLatitude(String raw) {
         Double value = parseDouble(raw);
         if (value == null || value < -90.0 || value > 90.0) {
