@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.Stop;
 import com.example.demo.repository.StopRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class StopServices {
     private static final Logger log = LoggerFactory.getLogger(StopServices.class);
@@ -29,6 +31,7 @@ public class StopServices {
         this.stopRepository = stopRepository;
     }
 
+    @Transactional
     public void importStops(InputStream inputStream) {
         try (BufferedReader reader =
                 new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
@@ -49,11 +52,11 @@ public class StopServices {
                         !headerMap.containsKey("stop_lat") || !headerMap.containsKey("stop_lon")) {
                         throw new RuntimeException("Missing required columns in header");
                     }
-                    maxIndex = Collections.max(headerMap.values()); // ← here
+                    maxIndex = Collections.max(headerMap.values());
                     continue; //skip header
                 }
 
-                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 
                 if (fields.length <= maxIndex) {
                     log.warn("Skipping line {}: not enough fields", lineNumber);
@@ -91,7 +94,7 @@ public class StopServices {
 
     private HashMap<String, Integer> parseHeader(String headerLine) {
         HashMap<String, Integer> headerMap = new HashMap<>();
-        String[] headers = headerLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+        String[] headers = headerLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         for (int i = 0; i < headers.length; i++){
             headerMap.put(headers[i].trim(), i);
         }
@@ -104,7 +107,7 @@ public class StopServices {
             while ((entry = zis.getNextEntry()) != null) {
                 if (entry.getName().equalsIgnoreCase("stops.txt")){
                     importStops(zis);
-                    break; //stop after processing stops.txt
+                    break; //stops after processing stops.txt
                 }
             }
         }
