@@ -1,6 +1,7 @@
 target/
 .vscode/
 stops.txt
+routes.txt
 test.http
 HELP.md
 application.properties

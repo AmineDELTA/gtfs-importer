@@ -39,7 +39,7 @@ public class GtfsController {
     public ResponseEntity<String> importStops(@RequestParam MultipartFile file) {
         try {
             stopServices.importStops(file.getInputStream());
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IOException | RuntimeException e) {
             return ResponseEntity.status(500).body("Error importing stops: " + e.getMessage());
         }
         return ResponseEntity.ok("Stops imported successfully");
@@ -52,11 +52,11 @@ public class GtfsController {
 
     @PostMapping("/import-routes")
     public ResponseEntity<String> importRoutes(@RequestParam MultipartFile file) {
-        //try {
-            //routeServices.importRoutes(file.getInputStream());
-        //} catch (IOException | IllegalArgumentException e) {
-          //  return ResponseEntity.status(500).body("Error importing routes: " + e.getMessage());
-        //}
+        try {
+            routeServices.importRoutes(file.getInputStream());
+        } catch (IOException | IllegalArgumentException e) {
+          return ResponseEntity.status(500).body("Error importing routes: " + e.getMessage());
+        }
         return ResponseEntity.ok("Routes imported successfully");
     }
 
