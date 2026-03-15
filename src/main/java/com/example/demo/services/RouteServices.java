@@ -46,8 +46,8 @@ public class RouteServices {
 
                 if (firstLine) {
                     firstLine = false;
-                    headerMap = parseHeader(line);
-                    if (!headerMap.containsKey("route_id") || !headerMap.containsKey("route_type") ||
+                    headerMap = GtfsParserUtils.parseHeader(line);
+                    if (!GtfsParserUtils.hasRequiredColumns(headerMap, "route_id", "route_type") ||
                         (!headerMap.containsKey("route_short_name") && !headerMap.containsKey("route_long_name"))) {
                         throw new RuntimeException("Missing required columns in header");
                     }
@@ -55,7 +55,7 @@ public class RouteServices {
                     continue; //skip header
                 }
 
-                String[] fields = line.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                String[] fields = line.split(GtfsParserUtils.CSV_SPLIT_REGEX, -1);
 
                 if (fields.length <= maxIndex) {
                     log.warn("Skipping line {}: not enough fields", lineNumber);
@@ -74,7 +74,7 @@ public class RouteServices {
                     continue;
                 }
 
-                Integer type = parseType(fields[headerMap.get("route_type")].trim());
+                Integer type = GtfsParserUtils.parseType(fields[headerMap.get("route_type")].trim());
 
                 if (type == null) {
                     log.warn("Skipping line {}: invalid route type", lineNumber);
@@ -101,15 +101,6 @@ public class RouteServices {
         }
     }
 
-    private HashMap<String, Integer> parseHeader(String headerLine) {
-        HashMap<String, Integer> headerMap = new HashMap<>();
-        String[] headers = headerLine.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-        for (int i = 0; i < headers.length; i++){
-            headerMap.put(headers[i].trim(), i);
-        }
-        return headerMap;
-    }
-
     public void importZip(InputStream zipInputStream) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(zipInputStream)) {
             ZipEntry entry;
@@ -119,31 +110,6 @@ public class RouteServices {
                     break; //stops after processing routes.txt
                 }
             }
-        }
-    }
-
-    private Integer parseType(String raw) {
-        Integer value = parseInteger(raw);
-        if (value == null || !isValidGtfsRouteType(value)) {
-            return null;
-        }
-        return value;
-    }
-
-    private boolean isValidGtfsRouteType(int value) {
-        // GTFS core route_type values are 0-7; 11 and 12 are common extensions, we need to do more research on this next time
-        return (value >= 0 && value <= 7) || value == 11 || value == 12;
-    }
-
-    private Integer parseInteger(String raw) {
-        if (raw == null || raw.isBlank()) {
-            return null;
-        }
-        try {
-            int value = Integer.parseInt(raw);
-            return value;
-        } catch (NumberFormatException e) {
-            return null;
         }
     }
 
