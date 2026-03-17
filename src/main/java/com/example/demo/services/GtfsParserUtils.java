@@ -1,12 +1,21 @@
 package com.example.demo.services;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 public class GtfsParserUtils {
         private GtfsParserUtils() {
         }
+
+    @FunctionalInterface
+    public interface ZipEntryImporter {
+        void importEntry(InputStream inputStream) throws IOException;
+    }
 
         public static final String CSV_SPLIT_REGEX = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
 
@@ -87,5 +96,18 @@ public class GtfsParserUtils {
                 return null;
             }
             return lon;
+        }
+
+        public static void importFromZip(InputStream zipInputStream, String targetEntry, ZipEntryImporter importer)
+                throws IOException {
+            try (ZipInputStream zis = new ZipInputStream(zipInputStream)) {
+                ZipEntry entry;
+                while ((entry = zis.getNextEntry()) != null) {
+                    if (entry.getName().equalsIgnoreCase(targetEntry)) {
+                        importer.importEntry(zis);
+                        break;
+                    }
+                }
+            }
         }
     }

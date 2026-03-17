@@ -8,8 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,15 +100,7 @@ public class RouteServices {
     }
 
     public void importZip(InputStream zipInputStream) throws IOException {
-        try (ZipInputStream zis = new ZipInputStream(zipInputStream)) {
-            ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
-                if (entry.getName().equalsIgnoreCase("routes.txt")){
-                    importRoutes(zis);
-                    break; //stops after processing routes.txt
-                }
-            }
-        }
+        GtfsParserUtils.importFromZip(zipInputStream, "routes.txt", this::importRoutes);
     }
 
 public Page<Route> getRoutes(Pageable pageable) {
