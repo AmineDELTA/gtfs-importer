@@ -16,16 +16,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Stop;
-import com.example.demo.repository.StopRepository;
+import com.example.demo.repository.StopRepo;
 
 import jakarta.transaction.Transactional;
 
 @Service
 public class StopServices {
     private static final Logger log = LoggerFactory.getLogger(StopServices.class);
-    private final StopRepository stopRepository;
+    private final StopRepo stopRepository;
 
-    public StopServices(StopRepository stopRepository) {
+    public StopServices(StopRepo stopRepository) {
         this.stopRepository = stopRepository;
     }
 

@@ -17,17 +17,17 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Route;
 import com.example.demo.model.Trip;
-import com.example.demo.repository.RouteRepository;
-import com.example.demo.repository.TripRepository;
+import com.example.demo.repository.RouteRepo;
+import com.example.demo.repository.TripRepo;
 
 import jakarta.transaction.Transactional;
 @Service
 public class TripServices {
     private static final Logger log = LoggerFactory.getLogger(TripServices.class);
-    private final TripRepository tripRepository;
-    private final RouteRepository routeRepository;
+    private final TripRepo tripRepository;
+    private final RouteRepo routeRepository;
 
-    public TripServices(TripRepository tripRepository, RouteRepository routeRepository) {
+    public TripServices(TripRepo tripRepository, RouteRepo routeRepository) {
         this.tripRepository = tripRepository;
         this.routeRepository = routeRepository;
     }

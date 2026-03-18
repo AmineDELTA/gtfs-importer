@@ -16,15 +16,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Route;
-import com.example.demo.repository.RouteRepository;
+import com.example.demo.repository.RouteRepo;
 
 import jakarta.transaction.Transactional;
 @Service
 public class RouteServices {
     private static final Logger log = LoggerFactory.getLogger(RouteServices.class);
-    private final RouteRepository routeRepository;
+    private final RouteRepo routeRepository;
 
-    public RouteServices(RouteRepository routeRepository) {
+    public RouteServices(RouteRepo routeRepository) {
         this.routeRepository = routeRepository;
     }
 

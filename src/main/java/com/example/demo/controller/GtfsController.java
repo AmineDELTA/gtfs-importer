@@ -14,8 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Route;
 import com.example.demo.model.Stop;
-import com.example.demo.repository.RouteRepository;
-import com.example.demo.repository.StopRepository;
+import com.example.demo.repository.RouteRepo;
+import com.example.demo.repository.StopRepo;
 import com.example.demo.services.RouteServices;
 import com.example.demo.services.StopServices;
 
@@ -23,12 +23,12 @@ import com.example.demo.services.StopServices;
 @RequestMapping("/api/gtfs")
 public class GtfsController {
 
-    private final StopRepository stopRepository;
+    private final StopRepo stopRepository;
     private final StopServices stopServices;
-    private final RouteRepository routeRepository;
+    private final RouteRepo routeRepository;
     private final RouteServices routeServices;
 
-    public GtfsController(StopRepository stopRepository, StopServices stopServices, RouteRepository routeRepository, RouteServices routeServices) {
+    public GtfsController(StopRepo stopRepository, StopServices stopServices, RouteRepo routeRepository, RouteServices routeServices) {
         this.stopRepository = stopRepository;
         this.stopServices = stopServices;
         this.routeRepository = routeRepository;
