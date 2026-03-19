@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -9,6 +11,11 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "stop_times")
 public class StopTime {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "stop_time_id")
+    private Long id;
     
     @ManyToOne
     private Trip trip;
@@ -38,6 +45,8 @@ public class StopTime {
     }
 
     //getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     public Trip getTrip() { return trip; }
     public void setTrip(Trip trip) { this.trip = trip; }
     public Stop getStop() { return stop; }

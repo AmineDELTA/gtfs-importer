@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.Stop;
 import com.example.demo.model.StopTime;
 import com.example.demo.model.Trip;
+import com.example.demo.repository.StopRepo;
 import com.example.demo.repository.StopTimeRepo;
 import com.example.demo.repository.TripRepo;
-import com.example.demo.repository.StopRepo;
 
 import jakarta.transaction.Transactional;
 
@@ -43,6 +43,16 @@ public class StopTimeServices {
         try (BufferedReader reader =
                 new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
+            HashMap<String, Trip> tripById = new HashMap<>();
+            for (Trip trip : tripRepository.findAll()) {
+                tripById.put(trip.getId(), trip);
+            }
+
+            HashMap<String, Stop> stopById = new HashMap<>();
+            for (Stop stop : stopRepository.findAll()) {
+                stopById.put(stop.getId(), stop);
+            }
+
             String line;
             boolean firstLine = true;
             int lineNumber = 0;
@@ -56,7 +66,7 @@ public class StopTimeServices {
                 if (firstLine) {
                     firstLine = false;
                     headerMap = GtfsParserUtils.parseHeader(line);
-                    if (!GtfsParserUtils.hasRequiredColumns(headerMap, "trip_id", "stop_id", "arrival_time")) {
+                    if (!GtfsParserUtils.hasRequiredColumns(headerMap, "trip_id", "stop_id", "arrival_time", "departure_time", "stop_sequence")) {
                         throw new RuntimeException("Missing required columns in header");
                     }
                     maxIndex = Collections.max(headerMap.values());
@@ -81,6 +91,7 @@ public class StopTimeServices {
                 Integer stopSequence = headerMap.containsKey("stop_sequence")
                     ? GtfsParserUtils.parseInteger(fields[headerMap.get("stop_sequence")].trim())
                     : null;
+                    
                 if (stopSequence == null || stopSequence <= 0) {
                     log.warn("Skipping line {}: invalid stop sequence '{}'", lineNumber, fields[headerMap.get("stop_sequence")]);
                     continue;
@@ -89,13 +100,13 @@ public class StopTimeServices {
                 String tripId = fields[headerMap.get("trip_id")].trim();
                 String stopId = fields[headerMap.get("stop_id")].trim();
 
-                Trip trip = tripRepository.findById(tripId).orElse(null);
+                Trip trip = tripById.get(tripId);
                 if (trip == null) {
                     log.warn("Skipping line {}: trip not found", lineNumber);
                     continue;
                 }
 
-                Stop stop = stopRepository.findById(stopId).orElse(null);
+                Stop stop = stopById.get(stopId);
                 if (stop == null) {
                     log.warn("Skipping line {}: stop not found", lineNumber);
                     continue;
@@ -137,7 +148,7 @@ public class StopTimeServices {
         GtfsParserUtils.importFromZip(zipInputStream, "stop_times.txt", this::importStopTimes);
     }
 
-public Page<Trip> getTrips(Pageable pageable) {
-    return tripRepository.findAll(pageable);
+public Page<StopTime> getStopTimes(Pageable pageable) {
+    return stopTimeRepository.findAll(pageable);
 }
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.model.StopTime;
 
 @Repository
-public interface StopTimeRepo extends JpaRepository<StopTime, String> {
+public interface StopTimeRepo extends JpaRepository<StopTime, Long> {
     
 }
  

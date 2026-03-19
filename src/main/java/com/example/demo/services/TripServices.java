@@ -37,6 +37,11 @@ public class TripServices {
         try (BufferedReader reader =
                 new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
+            HashMap<String, Route> routeById = new HashMap<>();
+            for (Route route : routeRepository.findAll()) {
+                routeById.put(route.getId(), route);
+            }
+
             String line;
             boolean firstLine = true;
             int lineNumber = 0;
@@ -72,7 +77,7 @@ public class TripServices {
                     : null;
 
                 String serviceId = fields[headerMap.get("service_id")].trim();
-                Route route = routeRepository.findById(fields[headerMap.get("route_id")].trim()).orElse(null);
+                Route route = routeById.get(fields[headerMap.get("route_id")].trim());
 
                 if (serviceId.isEmpty() || route == null) {
                     log.warn("Skipping line {}: missing service_id or route not found", lineNumber); 
