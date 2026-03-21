@@ -16,6 +16,7 @@ import com.example.demo.model.Route;
 import com.example.demo.model.Stop;
 import com.example.demo.model.StopTime;
 import com.example.demo.model.Trip;
+import com.example.demo.services.GtfsImportService;
 import com.example.demo.services.RouteServices;
 import com.example.demo.services.StopServices;
 import com.example.demo.services.StopTimeServices;
@@ -29,13 +30,14 @@ public class GtfsController {
     private final RouteServices routeServices;
     private final TripServices tripServices;
     private final StopTimeServices stopTimeServices;
+    private final GtfsImportService gtfsImportService;
 
-
-    public GtfsController(StopServices stopServices, RouteServices routeServices, TripServices tripServices, StopTimeServices stopTimeServices) {
+    public GtfsController(StopServices stopServices, RouteServices routeServices, TripServices tripServices, StopTimeServices stopTimeServices, GtfsImportService gtfsImportService) {
         this.stopServices = stopServices;
         this.routeServices = routeServices;
         this.tripServices = tripServices;
         this.stopTimeServices = stopTimeServices;
+        this.gtfsImportService = gtfsImportService;
     }
 
     @PostMapping("/import-stops")
@@ -97,4 +99,14 @@ public class GtfsController {
     public ResponseEntity<Page<StopTime>> getStopTimes(Pageable pageable) {
         return ResponseEntity.ok(stopTimeServices.getStopTimes(pageable));
     }
+
+    @PostMapping("/import")
+public ResponseEntity<String> importGtfs(@RequestParam MultipartFile file) {
+    try {
+        gtfsImportService.importGtfs(file.getInputStream());
+    } catch (IOException | RuntimeException e) {
+        return ResponseEntity.status(500).body("Import failed: " + e.getMessage());
+    }
+    return ResponseEntity.ok("GTFS data imported successfully");
+}
 }

@@ -63,7 +63,7 @@ public class GtfsParserUtils {
             }
 
             try {
-                return Integer.parseInt(intStr.trim());
+                return Integer.valueOf(intStr.trim());
             } catch (NumberFormatException e) {
                 return null;
             }
