@@ -18,21 +18,21 @@ import org.springframework.stereotype.Service;
 import com.amine.gtfs.model.Stop;
 import com.amine.gtfs.model.StopTime;
 import com.amine.gtfs.model.Trip;
-import com.amine.gtfs.repository.StopRepo;
-import com.amine.gtfs.repository.StopTimeRepo;
-import com.amine.gtfs.repository.TripRepo;
+import com.amine.gtfs.repository.StopRepository;
+import com.amine.gtfs.repository.StopTimeRepository;
+import com.amine.gtfs.repository.TripRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service
-public class StopTimeServices {
-    private static final Logger log = LoggerFactory.getLogger(StopTimeServices.class);
+public class StopTimeService {
+    private static final Logger log = LoggerFactory.getLogger(StopTimeService.class);
     private static final int BATCH_SIZE = 1000;
-    private final StopTimeRepo stopTimeRepository;
-    private final TripRepo tripRepository;
-    private final StopRepo stopRepository;
+    private final StopTimeRepository stopTimeRepository;
+    private final TripRepository tripRepository;
+    private final StopRepository stopRepository;
 
-    public StopTimeServices(StopTimeRepo stopTimeRepository, TripRepo tripRepository, StopRepo stopRepository) {
+    public StopTimeService(StopTimeRepository stopTimeRepository, TripRepository tripRepository, StopRepository stopRepository) {
         this.stopTimeRepository = stopTimeRepository;
         this.tripRepository = tripRepository;
         this.stopRepository = stopRepository;

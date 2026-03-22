@@ -16,16 +16,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.amine.gtfs.model.Stop;
-import com.amine.gtfs.repository.StopRepo;
+import com.amine.gtfs.repository.StopRepository;
 
 import jakarta.transaction.Transactional;
 
 @Service
-public class StopServices {
-    private static final Logger log = LoggerFactory.getLogger(StopServices.class);
-    private final StopRepo stopRepository;
+public class StopService {
+    private static final Logger log = LoggerFactory.getLogger(StopService.class);
+    private final StopRepository stopRepository;
 
-    public StopServices(StopRepo stopRepository) {
+    public StopService(StopRepository stopRepository) {
         this.stopRepository = stopRepository;
     }
 

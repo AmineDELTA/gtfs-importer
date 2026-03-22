@@ -6,23 +6,26 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class GtfsImportService {
-    private final StopServices stopServices;
-    private final RouteServices routeServices;
-    private final TripServices tripServices;
-    private final StopTimeServices stopTimeServices;
+    private final StopService stopService;
+    private final RouteService routeService;
+    private final TripService tripService;
+    private final StopTimeService stopTimeService;
 
-    public GtfsImportService(StopServices stopServices, RouteServices routeServices, TripServices tripServices, StopTimeServices stopTimeServices) {
-        this.stopServices = stopServices;
-        this.routeServices = routeServices;
-        this.tripServices = tripServices;
-        this.stopTimeServices = stopTimeServices;
+    public GtfsImportService(StopService stopService, RouteService routeService, TripService tripService, StopTimeService stopTimeService) {
+        this.stopService = stopService;
+        this.routeService = routeService;
+        this.tripService = tripService;
+        this.stopTimeService = stopTimeService;
     }
 
+    @Transactional
     public void importGtfs(InputStream zipInputStream) throws IOException {
         HashMap<String, byte[]> gtfsData = new HashMap<>();
         try (ZipInputStream zis = new ZipInputStream(zipInputStream)) {
@@ -40,25 +43,25 @@ public class GtfsImportService {
 
         if (gtfsData.containsKey("stops.txt")) {
             try (InputStream stopsStream = new ByteArrayInputStream(gtfsData.get("stops.txt"))) {
-                this.stopServices.importStops(stopsStream);
+                this.stopService.importStops(stopsStream);
             }
         }
 
         if (gtfsData.containsKey("routes.txt")) {
             try (InputStream routesStream = new ByteArrayInputStream(gtfsData.get("routes.txt"))) {
-                this.routeServices.importRoutes(routesStream);
+                this.routeService.importRoutes(routesStream);
             }
         }
 
         if (gtfsData.containsKey("trips.txt")) {
             try (InputStream tripsStream = new ByteArrayInputStream(gtfsData.get("trips.txt"))) {
-                this.tripServices.importTrips(tripsStream);
+                this.tripService.importTrips(tripsStream);
             }
         }
 
         if (gtfsData.containsKey("stop_times.txt")) {
             try (InputStream stopTimesStream = new ByteArrayInputStream(gtfsData.get("stop_times.txt"))) {
-                this.stopTimeServices.importStopTimes(stopTimesStream);
+                this.stopTimeService.importStopTimes(stopTimesStream);
             }
         }
     }

@@ -17,33 +17,33 @@ import com.amine.gtfs.model.Stop;
 import com.amine.gtfs.model.StopTime;
 import com.amine.gtfs.model.Trip;
 import com.amine.gtfs.services.GtfsImportService;
-import com.amine.gtfs.services.RouteServices;
-import com.amine.gtfs.services.StopServices;
-import com.amine.gtfs.services.StopTimeServices;
-import com.amine.gtfs.services.TripServices;
+import com.amine.gtfs.services.RouteService;
+import com.amine.gtfs.services.StopService;
+import com.amine.gtfs.services.StopTimeService;
+import com.amine.gtfs.services.TripService;
 
 @RestController
 @RequestMapping("/api/gtfs")
 public class GtfsController {
 
-    private final StopServices stopServices;
-    private final RouteServices routeServices;
-    private final TripServices tripServices;
-    private final StopTimeServices stopTimeServices;
+    private final StopService stopService;
+    private final RouteService routeService;
+    private final TripService tripService;
+    private final StopTimeService stopTimeService;
     private final GtfsImportService gtfsImportService;
 
-    public GtfsController(StopServices stopServices, RouteServices routeServices, TripServices tripServices, StopTimeServices stopTimeServices, GtfsImportService gtfsImportService) {
-        this.stopServices = stopServices;
-        this.routeServices = routeServices;
-        this.tripServices = tripServices;
-        this.stopTimeServices = stopTimeServices;
+    public GtfsController(StopService stopService, RouteService routeService, TripService tripService, StopTimeService stopTimeService, GtfsImportService gtfsImportService) {
+        this.stopService = stopService;
+        this.routeService = routeService;
+        this.tripService = tripService;
+        this.stopTimeService = stopTimeService;
         this.gtfsImportService = gtfsImportService;
     }
 
     @PostMapping("/import-stops")
     public ResponseEntity<String> importStops(@RequestParam MultipartFile file) {
         try {
-            stopServices.importStops(file.getInputStream());
+            stopService.importStops(file.getInputStream());
         } catch (IOException | RuntimeException e) {
             return ResponseEntity.status(500).body("Error importing stops: " + e.getMessage());
         }
@@ -52,13 +52,13 @@ public class GtfsController {
 
     @GetMapping("/stops")
     public ResponseEntity<Page<Stop>> getStops(Pageable pageable) {
-        return ResponseEntity.ok(stopServices.getStops(pageable));
+        return ResponseEntity.ok(stopService.getStops(pageable));
     }
 
     @PostMapping("/import-routes")
     public ResponseEntity<String> importRoutes(@RequestParam MultipartFile file) {
         try {
-            routeServices.importRoutes(file.getInputStream());
+            routeService.importRoutes(file.getInputStream());
         } catch (IOException | IllegalArgumentException e) {
           return ResponseEntity.status(500).body("Error importing routes: " + e.getMessage());
         }
@@ -67,13 +67,13 @@ public class GtfsController {
 
     @GetMapping("/routes")
     public ResponseEntity<Page<Route>> getRoutes(Pageable pageable) {
-        return ResponseEntity.ok(routeServices.getRoutes(pageable));
+        return ResponseEntity.ok(routeService.getRoutes(pageable));
     }
 
     @PostMapping("/import-trips")
     public ResponseEntity<String> importTrips(@RequestParam MultipartFile file) {
         try {
-            tripServices.importTrips(file.getInputStream());
+            tripService.importTrips(file.getInputStream());
         } catch (IOException | IllegalArgumentException e) {
           return ResponseEntity.status(500).body("Error importing trips: " + e.getMessage());
         }
@@ -82,13 +82,13 @@ public class GtfsController {
 
     @GetMapping("/trips")
     public ResponseEntity<Page<Trip>> getTrips(Pageable pageable) {
-        return ResponseEntity.ok(tripServices.getTrips(pageable));
+        return ResponseEntity.ok(tripService.getTrips(pageable));
     }
 
     @PostMapping("/import-stop-times")
     public ResponseEntity<String> importStopTimes(@RequestParam MultipartFile file) {
         try {
-            stopTimeServices.importStopTimes(file.getInputStream());
+            stopTimeService.importStopTimes(file.getInputStream());
         } catch (IOException | IllegalArgumentException e) {
           return ResponseEntity.status(500).body("Error importing stop times: " + e.getMessage());
         }
@@ -97,7 +97,7 @@ public class GtfsController {
 
     @GetMapping("/stop-times")    
     public ResponseEntity<Page<StopTime>> getStopTimes(Pageable pageable) {
-        return ResponseEntity.ok(stopTimeServices.getStopTimes(pageable));
+        return ResponseEntity.ok(stopTimeService.getStopTimes(pageable));
     }
 
     @PostMapping("/import")

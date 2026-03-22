@@ -25,8 +25,8 @@ Java 17 · Spring Boot · Spring Data JPA · PostgreSQL · Maven
 ## Getting Started
 
 ```sh
-git clone https://github.com/your-username/gtfs-importer.git
-cd gtfs-importer
+git clone https://github.com/AmineDELTA/gtfs-importer
+cd gtfs
 ./mvnw spring-boot:run
 ```
 

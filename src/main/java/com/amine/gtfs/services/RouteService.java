@@ -16,15 +16,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.amine.gtfs.model.Route;
-import com.amine.gtfs.repository.RouteRepo;
+import com.amine.gtfs.repository.RouteRepository;
 
 import jakarta.transaction.Transactional;
-@Service
-public class RouteServices {
-    private static final Logger log = LoggerFactory.getLogger(RouteServices.class);
-    private final RouteRepo routeRepository;
 
-    public RouteServices(RouteRepo routeRepository) {
+@Service
+public class RouteService {
+    private static final Logger log = LoggerFactory.getLogger(RouteService.class);
+    private final RouteRepository routeRepository;
+
+    public RouteService(RouteRepository routeRepository) {
         this.routeRepository = routeRepository;
     }
 

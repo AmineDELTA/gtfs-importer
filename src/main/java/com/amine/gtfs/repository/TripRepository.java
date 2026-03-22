@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.amine.gtfs.model.Trip;
 
 @Repository
-public interface TripRepo extends JpaRepository<Trip, String> {
+public interface TripRepository extends JpaRepository<Trip, String> {
 
 	@Override
 	@EntityGraph(attributePaths = "route")

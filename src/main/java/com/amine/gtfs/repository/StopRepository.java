@@ -3,10 +3,8 @@ package com.amine.gtfs.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.amine.gtfs.model.StopTime;
+import com.amine.gtfs.model.Stop;
 
 @Repository
-public interface StopTimeRepo extends JpaRepository<StopTime, Long> {
-    
+public interface StopRepository extends JpaRepository<Stop, String> {
 }
- 
