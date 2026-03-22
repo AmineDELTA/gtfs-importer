@@ -1,4 +1,4 @@
-package com.example.demo.model;
+package com.amine.gtfs.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.example.demo.services;
+package com.amine.gtfs.services;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,8 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.model.Route;
-import com.example.demo.repository.RouteRepo;
+import com.amine.gtfs.model.Route;
+import com.amine.gtfs.repository.RouteRepo;
 
 import jakarta.transaction.Transactional;
 @Service

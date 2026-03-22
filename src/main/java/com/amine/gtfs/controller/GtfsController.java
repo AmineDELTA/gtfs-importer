@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.amine.gtfs.controller;
 
 import java.io.IOException;
 
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.demo.model.Route;
-import com.example.demo.model.Stop;
-import com.example.demo.model.StopTime;
-import com.example.demo.model.Trip;
-import com.example.demo.services.GtfsImportService;
-import com.example.demo.services.RouteServices;
-import com.example.demo.services.StopServices;
-import com.example.demo.services.StopTimeServices;
-import com.example.demo.services.TripServices;
+import com.amine.gtfs.model.Route;
+import com.amine.gtfs.model.Stop;
+import com.amine.gtfs.model.StopTime;
+import com.amine.gtfs.model.Trip;
+import com.amine.gtfs.services.GtfsImportService;
+import com.amine.gtfs.services.RouteServices;
+import com.amine.gtfs.services.StopServices;
+import com.amine.gtfs.services.StopTimeServices;
+import com.amine.gtfs.services.TripServices;
 
 @RestController
 @RequestMapping("/api/gtfs")

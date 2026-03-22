@@ -1,10 +1,11 @@
-package com.example.demo.model;
+package com.amine.gtfs.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -18,9 +19,11 @@ public class StopTime {
     private Long id;
     
     @ManyToOne
+    @JoinColumn(name = "trip_id")
     private Trip trip;
 
-    @ManyToOne  
+    @ManyToOne
+    @JoinColumn(name = "stop_id")
     private Stop stop;
 
     @Column(name = "arrival_time")
