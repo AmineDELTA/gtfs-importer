@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.amine.gtfs.error.GtfsImportException;
 import com.amine.gtfs.model.Route;
 import com.amine.gtfs.repository.RouteRepository;
 
@@ -48,7 +49,7 @@ public class RouteService {
                     headerMap = GtfsParserUtils.parseHeader(line);
                     if (!GtfsParserUtils.hasRequiredColumns(headerMap, "route_id", "route_type") ||
                         (!headerMap.containsKey("route_short_name") && !headerMap.containsKey("route_long_name"))) {
-                        throw new RuntimeException("Missing required columns in header");
+                        throw new GtfsImportException("Missing required columns in header");
                     }
                     maxIndex = Collections.max(headerMap.values());
                     continue; //skip header
@@ -96,7 +97,7 @@ public class RouteService {
             }
         } catch (IOException e) {
             log.error("Failed to import routes", e);
-            throw new RuntimeException("Failed to import routes", e);
+            throw new GtfsImportException("Failed to import routes", e);
         }
     }
 

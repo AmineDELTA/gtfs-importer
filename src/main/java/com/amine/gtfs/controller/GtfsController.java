@@ -41,12 +41,8 @@ public class GtfsController {
     }
 
     @PostMapping("/import-stops")
-    public ResponseEntity<String> importStops(@RequestParam MultipartFile file) {
-        try {
-            stopService.importStops(file.getInputStream());
-        } catch (IOException | RuntimeException e) {
-            return ResponseEntity.status(500).body("Error importing stops: " + e.getMessage());
-        }
+    public ResponseEntity<String> importStops(@RequestParam MultipartFile file) throws IOException {
+        stopService.importStops(file.getInputStream());
         return ResponseEntity.ok("Stops imported successfully");
     }
 
@@ -56,12 +52,8 @@ public class GtfsController {
     }
 
     @PostMapping("/import-routes")
-    public ResponseEntity<String> importRoutes(@RequestParam MultipartFile file) {
-        try {
-            routeService.importRoutes(file.getInputStream());
-        } catch (IOException | IllegalArgumentException e) {
-          return ResponseEntity.status(500).body("Error importing routes: " + e.getMessage());
-        }
+    public ResponseEntity<String> importRoutes(@RequestParam MultipartFile file) throws IOException {
+        routeService.importRoutes(file.getInputStream());
         return ResponseEntity.ok("Routes imported successfully");
     }
 
@@ -71,12 +63,8 @@ public class GtfsController {
     }
 
     @PostMapping("/import-trips")
-    public ResponseEntity<String> importTrips(@RequestParam MultipartFile file) {
-        try {
-            tripService.importTrips(file.getInputStream());
-        } catch (IOException | IllegalArgumentException e) {
-          return ResponseEntity.status(500).body("Error importing trips: " + e.getMessage());
-        }
+    public ResponseEntity<String> importTrips(@RequestParam MultipartFile file) throws IOException {
+        tripService.importTrips(file.getInputStream());
         return ResponseEntity.ok("Trips imported successfully");
     }
 
@@ -86,12 +74,8 @@ public class GtfsController {
     }
 
     @PostMapping("/import-stop-times")
-    public ResponseEntity<String> importStopTimes(@RequestParam MultipartFile file) {
-        try {
-            stopTimeService.importStopTimes(file.getInputStream());
-        } catch (IOException | IllegalArgumentException e) {
-          return ResponseEntity.status(500).body("Error importing stop times: " + e.getMessage());
-        }
+    public ResponseEntity<String> importStopTimes(@RequestParam MultipartFile file) throws IOException {
+        stopTimeService.importStopTimes(file.getInputStream());
         return ResponseEntity.ok("Stop times imported successfully");
     }
 
@@ -101,12 +85,8 @@ public class GtfsController {
     }
 
     @PostMapping("/import")
-public ResponseEntity<String> importGtfs(@RequestParam MultipartFile file) {
-    try {
+public ResponseEntity<String> importGtfs(@RequestParam MultipartFile file) throws IOException {
         gtfsImportService.importGtfs(file.getInputStream());
-    } catch (IOException | RuntimeException e) {
-        return ResponseEntity.status(500).body("Import failed: " + e.getMessage());
-    }
     return ResponseEntity.ok("GTFS data imported successfully");
 }
 }

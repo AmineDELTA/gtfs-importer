@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.amine.gtfs.error.GtfsImportException;
 import com.amine.gtfs.model.Stop;
 import com.amine.gtfs.model.StopTime;
 import com.amine.gtfs.model.Trip;
@@ -67,7 +68,7 @@ public class StopTimeService {
                     firstLine = false;
                     headerMap = GtfsParserUtils.parseHeader(line);
                     if (!GtfsParserUtils.hasRequiredColumns(headerMap, "trip_id", "stop_id", "arrival_time", "departure_time", "stop_sequence")) {
-                        throw new RuntimeException("Missing required columns in header");
+                        throw new GtfsImportException("Missing required columns in header");
                     }
                     maxIndex = Collections.max(headerMap.values());
                     continue; //skip header
@@ -140,7 +141,7 @@ public class StopTimeService {
             }
         } catch (IOException e) {
             log.error("Failed to import stop times", e);
-            throw new RuntimeException("Failed to import stop times", e);
+            throw new GtfsImportException("Failed to import stop times", e);
         }
     }
 

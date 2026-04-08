@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.amine.gtfs.error.GtfsImportException;
 import com.amine.gtfs.model.Stop;
 import com.amine.gtfs.repository.StopRepository;
 
@@ -47,7 +48,7 @@ public class StopService {
                     firstLine = false;
                     headerMap = GtfsParserUtils.parseHeader(line);
                     if (!GtfsParserUtils.hasRequiredColumns(headerMap, "stop_id", "stop_name", "stop_lat", "stop_lon")) {
-                        throw new RuntimeException("Missing required columns in header");
+                        throw new GtfsImportException("Missing required columns in header");
                     }
                     maxIndex = Collections.max(headerMap.values());
                     continue; //skip header
@@ -85,7 +86,7 @@ public class StopService {
             }
         } catch (IOException e) {
             log.error("Failed to import stops", e);
-            throw new RuntimeException("Failed to import stops", e);
+            throw new GtfsImportException("Failed to import stops", e);
         }
     }
 
